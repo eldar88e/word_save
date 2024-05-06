@@ -33,20 +33,20 @@ Telegram::Bot::Client.run(TELEGRAM_BOT_TOKEN) do |bot|
       if message.text.match?(/\A[Aa]dd [a-zA-Z\W][a-zA-Z\W]/)
         word = message.text.sub(/\A[Aa]dd /, '')
         result = write(word: word)
-        msg = result.nil? ? "Cлово '#{word}' успешно сохранено!" : result
-        bot.api.send_message(chat_id: '1760823856', text: msg(msg), parse_mode: 'MarkdownV2')
+        msg = result.nil? ? "Cлово '#{word}' успешно сохранено" : result
+        bot.api.send_message(chat_id: '1760823856', text: msg, parse_mode: 'MarkdownV2')
         nil
       elsif message.text.match?(/\A[Aa]ll ?\z/)
         msg = all_word
-        msg = msg != '' ? msg : "Нет сохраненых слов!"
-        bot.api.send_message(chat_id: message.chat.id, text: escape(msg), parse_mode: 'MarkdownV2')
+        msg = msg != '' ? msg : "Нет сохраненых слов"
+        bot.api.send_message(chat_id: message.chat.id, text: msg, parse_mode: 'MarkdownV2')
         nil
       else
-        bot.api.send_message(chat_id: message.chat.id, text: escape('Введи All или Add и через пробел сохраняемое слово.'), parse_mode: 'MarkdownV2')
+        bot.api.send_message(chat_id: message.chat.id, text: 'Введи All или Add и через пробел сохраняемое слово', parse_mode: 'MarkdownV2')
         nil
       end
     else 
-      bot.api.send_message(chat_id: '1760823856', text: escape("Не верные данные!\n#{message.text}"), parse_mode: 'MarkdownV2')
+      bot.api.send_message(chat_id: '1760823856', text: "Не верные данные!\n#{message.text}", parse_mode: 'MarkdownV2')
     end
   end
 end
