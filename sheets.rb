@@ -1,6 +1,7 @@
 require 'telegram/bot'
 require 'dotenv/load'
 require 'google_drive'
+require 'pry'
 
 TELEGRAM_BOT_TOKEN = ENV.fetch('TELEGRAM_BOT_TOKEN')
 
@@ -32,14 +33,20 @@ Telegram::Bot::Client.run(TELEGRAM_BOT_TOKEN) do |bot|
       if message.text.match?(/\A[Aa]dd [a-zA-Z\W][a-zA-Z\W]/)
         word = message.text.sub(/\A[Aa]dd /, '')
         result = write(word: word)
-        message = result.nil? ? "Cлово '#{word}' успешно сохранено!" : result
-        bot.api.send_message(chat_id: '1760823856', text: message)
+        msg = result.nil? ? "Cлово '#{word}' успешно сохранено!" : result
+        bot.api.send_message(chat_id: '1760823856', text: msg(msg), parse_mode: 'MarkdownV2')
+        nil
       elsif message.text.match?(/\A[Aa]ll ?\z/)
-        bot.api.send_message(chat_id: '1760823856', text: all_word)
+        msg = all_word
+        msg = msg != '' ? msg : "Нет сохраненых слов!"
+        bot.api.send_message(chat_id: message.chat.id, text: escape(msg), parse_mode: 'MarkdownV2')
+        nil
+      else
+        bot.api.send_message(chat_id: message.chat.id, text: escape('Введи All или Add и через пробел сохраняемое слово.'), parse_mode: 'MarkdownV2')
+        nil
       end
     else 
-      bot.api.send_message(chat_id: '1760823856', text: "Не верные данные!\n #{message.text}")
+      bot.api.send_message(chat_id: '1760823856', text: escape("Не верные данные!\n#{message.text}"), parse_mode: 'MarkdownV2')
     end
   end
 end
-
