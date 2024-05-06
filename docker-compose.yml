@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+
+  word:
+    image: word
+    build: .
+    container_name: word
+    env_file: ./.env
+    volumes:
+      - gems:/usr/local/bundle
+    networks:
+      - word-net
+    restart: "unless-stopped"
+
+volumes:
+  gems:
+
+networks:
+  word-net:
